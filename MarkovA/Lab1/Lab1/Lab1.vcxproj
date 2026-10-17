@@ -102,6 +102,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>D:\Саша\0. ФИИТ\Алгоритмы и структуры данных\3825B1FIsp1-2_3\includes\Lab1</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -123,12 +124,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="tbitfield.h" />
-    <ClInclude Include="tset.h" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="tbitfield_.h" />
     <ClCompile Include="tset_.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\includes\Lab1\tbitfield.h" />
+    <ClInclude Include="..\..\..\includes\Lab1\tset.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

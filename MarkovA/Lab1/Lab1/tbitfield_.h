@@ -127,26 +127,39 @@ TBitField TBitField::operator~(void) {
     for (int i = 0; i < MemLen; i++) {
         res.pMem[i] = ~pMem[i];
     }
+    // Обнуляем неиспользуемые биты в последнем слове
+    if (MemLen > 0 && BitLen % bits_in_telem != 0) {
+        int used = BitLen % bits_in_telem;
+        TELEM mask = (TELEM(1) << used) - 1; 
+        res.pMem[MemLen - 1] &= mask;
+    }
     return res;
 }
 
 std::istream& operator>>(std::istream& istr, TBitField& bf) {
+    const int len = bf.GetLength();
+
+    for (int i = 0; i < len; i++) {
+        bf.ClrBit(i);
+    }
+
     char c;
     int i = 0;
-    while (i < bf.BitLen && istr >> c) {
+    while (i < len && (istr >> c)) {
         if (c == '0') {
-            bf.ClrBit(i++);
+            bf.ClrBit(i++);      
         }
         else if (c == '1') {
-            bf.SetBit(i++);
+            bf.SetBit(i++);     
         }
+        
     }
     return istr;
 }
 
 std::ostream& operator<<(std::ostream& ostr, const TBitField& bf) {
     for (int i = 0; i < bf.BitLen; i++) {
-        if (bf.GetBit(i) == '1')
+        if (bf.GetBit(i))
             ostr << '1';
         else ostr << '0';
     }

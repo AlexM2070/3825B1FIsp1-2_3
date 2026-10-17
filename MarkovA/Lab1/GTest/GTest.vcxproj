@@ -57,7 +57,7 @@
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>D:\Саша\0. ФИИТ\Алгоритмы и структуры данных\3825B1FIsp1-2_3\MarkovA\Lab1\Lab1</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Саша\0. ФИИТ\Алгоритмы и структуры данных\3825B1FIsp1-2_3\MarkovA\Lab1\Lab1;D:\Саша\0. ФИИТ\Алгоритмы и структуры данных\3825B1FIsp1-2_3\includes\Lab1</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>

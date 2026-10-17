@@ -56,12 +56,18 @@ TSet TSet::operator-(const int Elem) {
     temp.DelElem(Elem);
     return temp;
 }
-
+//Добавлена проверка на мощность множеств
 TSet TSet::operator+(const TSet& s) {
+    if (MaxPower != s.MaxPower) {
+        throw std::invalid_argument("Sets of unequal power");
+    }
     return TSet(BitField | s.BitField);
 }
 
 TSet TSet::operator*(const TSet& s) {
+    if (MaxPower != s.MaxPower) {
+        throw std::invalid_argument("Sets of unequal power");
+    }
     return TSet(BitField & s.BitField);
 }
 
@@ -70,6 +76,10 @@ TSet TSet::operator~(void) {
 }
 
 std::istream& operator>>(std::istream& istr, TSet& s) {
+    for (int i = 0; i < s.GetMaxPower(); i++) {
+        s.DelElem(i);
+    }
+
     int elem;
     while (istr >> elem) {
         if (elem >= 0 && elem < s.GetMaxPower()) {
