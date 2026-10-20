@@ -296,25 +296,13 @@ TEST(TSet, check_size_of_the_combination_of_two_sets_of_equal_size)
   EXPECT_EQ(size, set3.GetMaxPower());
 }
 
-TEST(TSet, can_combine_two_sets_of_non_equal_size)
+TEST(TSet, throws_when_combine_two_sets_of_non_equal_size)
 {
-  const int size1 = 5, size2 = 7;
-  TSet set1(size1), set2(size2), set3(size1), expSet(size2);
+  TSet set1(5), set2(7);
   set1.InsElem(1);
-  set1.InsElem(2);
-  set1.InsElem(4);
-  set2.InsElem(0);
-  set2.InsElem(1);
-  set2.InsElem(2);
   set2.InsElem(6);
-  set3 = set1 + set2;
-  expSet.InsElem(0);
-  expSet.InsElem(1);
-  expSet.InsElem(2);
-  expSet.InsElem(4);
-  expSet.InsElem(6);
-  EXPECT_EQ(expSet, set3);
-  EXPECT_EQ(expSet, set2 + set1);
+  ASSERT_ANY_THROW(set1 + set2);
+  ASSERT_ANY_THROW(set2 + set1);
 }
 
 TEST(TSet, union_with_empty_set_gives_same_set)
@@ -341,24 +329,13 @@ TEST(TSet, can_intersect_two_sets_of_equal_size)
   EXPECT_EQ(expSet, set3);
 }
 
-TEST(TSet, can_intersect_two_sets_of_non_equal_size)
+TEST(TSet, throws_when_intersect_two_sets_of_non_equal_size)
 {
-  const int size1 = 5, size2 = 7;
-  TSet set1(size1), set2(size2), set3(size1), expSet(size2);
+  TSet set1(5), set2(7);
   set1.InsElem(1);
-  set1.InsElem(2);
-  set1.InsElem(4);
-  set2.InsElem(0);
   set2.InsElem(1);
-  set2.InsElem(2);
-  set2.InsElem(4);
-  set2.InsElem(6);
-  set3 = set1 * set2;
-  expSet.InsElem(1);
-  expSet.InsElem(2);
-  expSet.InsElem(4);
-  EXPECT_EQ(expSet, set3);
-  EXPECT_EQ(expSet, set2 * set1);
+  ASSERT_ANY_THROW(set1 * set2);
+  ASSERT_ANY_THROW(set2 * set1);
 }
 
 TEST(TSet, intersection_of_disjoint_sets_is_empty)
