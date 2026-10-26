@@ -54,6 +54,17 @@ TEST(TestTBitField, Operation_ASSINGMENT) {
     EXPECT_EQ(1, bf1.GetBit(21));
 }
 
+TEST(TestTBitField, Check_Self_ASSINGMENT) {
+    TBitField bf(60);
+    bf.SetBit(5);
+    bf.SetBit(44);
+    bf = bf;
+    EXPECT_EQ(60, bf.GetLength());
+    EXPECT_EQ(1, bf.GetBit(5));
+    EXPECT_EQ(1, bf.GetBit(44));
+    EXPECT_EQ(0, bf.GetBit(0));
+}
+
 TEST(TestTBitField, Operation_COMPARISON) {
     TBitField bf1(75), bf2(75), bf3(9);
     EXPECT_TRUE(bf1 == bf2); 
@@ -93,6 +104,46 @@ TEST(TestTBitField, Operation_NOT) {
     EXPECT_EQ(0, res.GetBit(2));
     EXPECT_EQ(1, res.GetBit(3));
     EXPECT_EQ(1, res.GetBit(4));
+}
+
+TEST(TestTBitField, Edge_Cases) {
+    TBitField empty1(0), empty2(0);
+    EXPECT_EQ(0, empty1.GetLength());
+    EXPECT_TRUE(empty1 == empty2);
+    EXPECT_TRUE((empty1 | empty2) == empty1);
+    EXPECT_TRUE((empty1 & empty2) == empty1);
+    EXPECT_TRUE((~empty1) == empty1);
+    EXPECT_THROW(empty1.SetBit(0), std::out_of_range);
+    EXPECT_THROW(empty1.GetBit(0), std::out_of_range);
+    EXPECT_THROW(empty1.ClrBit(0), std::out_of_range);
+
+    TBitField bf(64);
+    EXPECT_THROW(bf.SetBit(-1), std::out_of_range);
+    EXPECT_THROW(bf.SetBit(64), std::out_of_range);
+    EXPECT_THROW(bf.ClrBit(-1), std::out_of_range);
+    EXPECT_THROW(bf.ClrBit(64), std::out_of_range);
+    EXPECT_THROW(bf.GetBit(-1), std::out_of_range);
+    EXPECT_THROW(bf.GetBit(64), std::out_of_range);
+
+    bf.SetBit(31);
+    bf.SetBit(32);
+    EXPECT_EQ(1, bf.GetBit(31));
+    EXPECT_EQ(1, bf.GetBit(32));
+    EXPECT_EQ(0, bf.GetBit(30));
+    EXPECT_EQ(0, bf.GetBit(33));
+
+    TBitField bf1(10), bf2(50);
+    bf1.SetBit(3);
+    bf2.SetBit(3);
+    bf2.SetBit(45);
+    TBitField resOr = bf1 | bf2;
+    TBitField resAnd = bf1 & bf2;
+    EXPECT_EQ(50, resOr.GetLength());
+    EXPECT_EQ(1, resOr.GetBit(3));
+    EXPECT_EQ(1, resOr.GetBit(45));
+    EXPECT_EQ(50, resAnd.GetLength());
+    EXPECT_EQ(1, resAnd.GetBit(3));
+    EXPECT_EQ(0, resAnd.GetBit(45));
 }
 
 // TSet
@@ -191,4 +242,65 @@ TEST(TestTSet, Operation_Complement) {
     EXPECT_FALSE(res.IsMember(2));
     EXPECT_TRUE(res.IsMember(3));
     EXPECT_TRUE(res.IsMember(4));
+}
+
+TEST(TestTSet, Empty_Set_Operations) {
+    TSet empty(20), s(20);
+    for (int i = 0; i < 20; i++) {
+        EXPECT_FALSE(empty.IsMember(i));
+    }
+
+    s.InsElem(3);
+    s.InsElem(15);
+
+    EXPECT_TRUE((s + empty) == s);
+    EXPECT_TRUE((empty + empty) == empty);
+    EXPECT_TRUE((s * empty) == empty);
+    EXPECT_TRUE((empty * empty) == empty);
+
+    EXPECT_TRUE((empty - 5) == empty);
+
+    TSet universal = ~empty;
+    for (int i = 0; i < 20; i++) {
+        EXPECT_TRUE(universal.IsMember(i));
+    }
+    EXPECT_TRUE((~universal) == empty);
+
+    TSet zeroSet(0);
+    EXPECT_EQ(0, zeroSet.GetMaxPower());
+    EXPECT_TRUE((zeroSet + zeroSet) == zeroSet);
+    EXPECT_TRUE((zeroSet * zeroSet) == zeroSet);
+    EXPECT_TRUE((~zeroSet) == zeroSet);
+    EXPECT_THROW(zeroSet.InsElem(0), std::out_of_range);
+    EXPECT_THROW(zeroSet.DelElem(0), std::out_of_range);
+    EXPECT_THROW(zeroSet.IsMember(0), std::out_of_range);
+}
+
+TEST(TestTSet, Edge_Cases) {
+    TSet s(20);
+
+    s = s + 0;
+    s = s + 19;
+    EXPECT_TRUE(s.IsMember(0));
+    EXPECT_TRUE(s.IsMember(19));
+
+    TSet copy = s;
+    s = s;
+    EXPECT_TRUE(s == copy);
+
+    TSet s1(10), s2(10), empty10(10);
+    s1.InsElem(0);
+    s2.InsElem(9);
+    EXPECT_TRUE((s1 * s2) == empty10);
+
+    EXPECT_THROW(s.InsElem(-1), std::out_of_range);
+    EXPECT_THROW(s.InsElem(20), std::out_of_range);
+    EXPECT_THROW(s.DelElem(-1), std::out_of_range);
+    EXPECT_THROW(s.DelElem(20), std::out_of_range);
+    EXPECT_THROW(s.IsMember(-1), std::out_of_range);
+    EXPECT_THROW(s.IsMember(20), std::out_of_range);
+    EXPECT_THROW(s + (-1), std::out_of_range);
+    EXPECT_THROW(s + 20, std::out_of_range);
+    EXPECT_THROW(s - (-1), std::out_of_range);
+    EXPECT_THROW(s - 20, std::out_of_range);
 }
